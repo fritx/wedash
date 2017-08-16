@@ -1,0 +1,16 @@
+{
+  "name": "wedash",
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "test": "ava --serial --verbose"
+  },
+  "devDependencies": {
+    "ava": "^0.19.1",
+    "jsdom": "^11.0.0"
+  },
+  "dependencies": {
+    "nuxt": "^1.0.0-alpha2"
+  }
+}

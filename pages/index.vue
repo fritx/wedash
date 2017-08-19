@@ -1,52 +1,36 @@
 <template>
-  <div class="editor" @mouseup="editorMouseUp">
+  <div class="editor">
     <span v-for="(c, i) in chars" :key="`${i}-${c}`"
+      :ref="`char-${i}`"
       :data-index="i"
-      :class="{ selected: inRange(i) }"
-      @mousedown="mouseDown(i)"
-      @mouseenter="mouseEnter(i)"
       @click="charClick(i)"
     >{{c}}</span>
   </div>  
 </template>
 
 <script>
+import text from '~/assets/text'
+
 export default {
   data () {
     return {
-      code: 'hello world',
+      text: text.trim(),
       range: { start: 0, end: 0 }
     }
   },
   computed: {
     chars () {
-      return this.code.split('')
+      return this.text.split('')
     }
   },
   methods: {
-    inRange (i) {
-      return i >= this.range.start && i <= this.range.end
-    },
-    editorMouseUp (e) {
-      let i = +e.target.dataset.index || Infinity
-      this.mouseEnter(i)
-      this.isMouseDown = false
-    },
-    mouseEnter (i) {
-      if (!this.isMouseDown) return
-      if (i >= this.range.start) {
-        this.range.end = i
-      } else {
-        this.range.start = i
-      }
-    },
-    mouseDown (i) {
-      this.isMouseDown = true
-      this.range.start = i
-      this.range.end = i
-    },
     charClick (i) {
-      // this.range = [i, i]
+      let range = document.createRange()
+      let span = this.$refs[`char-${i}`][0]
+      range.selectNode(span)
+      let selection = window.getSelection()
+      selection.removeAllRanges()
+      selection.addRange(range)
     }
   }
 }
@@ -58,18 +42,17 @@ export default {
   border: solid 1px silver;
   margin: 60px;
   min-height: 400px;
+  max-height: 500px;
   font-size: 20px;
   background-color: rgba(0, 0, 0, .8);
   color: white;
-}
-.selected {
-  background-color: rgba(255, 255, 255, .3);
+  white-space: pre-wrap;
 }
 </style>
 
 <style>
 ::selection {
-  color: inherit;
-  background-color: inherit;
+  color: white;
+  background-color: rgba(255, 255, 255, .3);
 }
 </style>
